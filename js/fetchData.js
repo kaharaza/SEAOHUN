@@ -5,7 +5,7 @@
   const fetchData = async () => {
     try {
       await $.ajax({
-        url: "./service/fetchdata.php",
+        url: "./../service/fetch_data.php",
         method: "GET",
         dataType: "json",
       })
