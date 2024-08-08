@@ -23,8 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return Response::error('Not found', 404);
         }
     } catch (\Throwable $e) {
-        Response::error($e, 500);
-        return throw $e;
+        Response::error(array(
+            "message" => $e->getMessage(),
+            "success" => false
+        ), 500);
     }
 } else {
     Response::error('REQUEST METHOD ERROR POST', 500);
