@@ -216,6 +216,7 @@ const formSubmit = async () => {
         } 
       }).done(async(res) => {
         const result = await res;
+        console.log(result);
         if (result.status === true) {
           document.getElementById("CloseModal").click();
           fetchData();
@@ -227,8 +228,6 @@ const formSubmit = async () => {
         title: id == '' ? 'กรอกไอดี': fname == '' ? 'กรอกชื่อ' : lname == '' ? 'กรอกนามสกุล' : phone == '' ? 'กรอกเบอร์โทร': '',
       })
     }
-
-    console.log(payload);
   } catch (e) {
     Swal.fire({
       title: "Error",

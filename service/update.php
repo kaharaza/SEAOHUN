@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             }
         } else {
             Response::error(array(
-                "message" => $e->getMessage(),
+                "message" => 'Not Id',
                 "success" => false
             ), 400);
         }
-    } catch (\Throwable $th) {
+    } catch (\Throwable $e) {
         Response::error(array(
             "message" => $e->getMessage(),
             "success" => false
