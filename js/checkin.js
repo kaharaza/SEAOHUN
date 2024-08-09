@@ -1,89 +1,90 @@
-$("#CheckIn").submit(async function (event) {
-    event.preventDefault();
-    try {
-        const fname = $("#fname").val();
-        const lname = $("#lname").val();
+window.onload = function () {
+  fetchData();
+};
 
-        if(fname && lname) {
-           const payload = {
-            fname: fname,
-            lname: lname
-           }
-        //    console.log(payload); // Debug ดูค่าที่ส่งมา
-           await $.ajax({
-            url: './../service/checkin.php',
-            method: "POST",
-            dataType: 'json',
-            data: {
-                payload: payload
-            }
-           }).done(async(res) => {
-            const result = await res;
-            if (result.status === true) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Check in success',
-                    html: `
+$("#CheckIn").submit(async function (event) {
+  event.preventDefault();
+  try {
+    const fname = $("#fname").val();
+    const lname = $("#lname").val();
+
+    if (fname && lname) {
+      const payload = {
+        fname: fname,
+        lname: lname,
+      };
+      await $.ajax({
+        url: "./../service/checkin.php",
+        method: "POST",
+        dataType: "json",
+        data: {
+          payload: payload,
+        },
+      })
+        .done(async (res) => {
+          const result = await res;
+          if (result.status === true) {
+            Swal.fire({
+              icon: "success",
+              title: "Check in success",
+              html: `
                         <div class="h1">รหัสประจำตัว</div>
                         <div class="h1">${result.response}</div>
-                    `
-                })
-                fetchData(); // เพิ่ม Code fetchData
-            }
-           }).fail(e => {
-            console.log(e.statusText);
-               Swal.fire({
-                 title: "Error",
-                 text: `${e.statusText}`,
-                 icon: "error",
-               });
-           })
-        } else {
-              Swal.fire({
-                title: "Error",
-                text: fname == '' ? 'กรอกชื่อ': lname == '' ? 'กรอกนามสกุล' : '',
-                icon: "error",
-              });
-             
-        }
-    } catch (e) {
-        Swal.fire({
-          title: "Error",
-          text: `${e.statusText}`,
-          icon: "error",
+                    `,
+            });
+            fetchData(); // เพิ่ม Code fetchData
+          }
+        })
+        .fail((e) => {
+          console.log(e.statusText);
+          Swal.fire({
+            title: "Error",
+            text: `${e.statusText}`,
+            icon: "error",
+          });
         });
+    } else {
+      Swal.fire({
+        title: "Error",
+        text: fname == "" ? "กรอกชื่อ" : lname == "" ? "กรอกนามสกุล" : "",
+        icon: "error",
+      });
     }
-})
+  } catch (e) {
+    Swal.fire({
+      title: "Error",
+      text: `${e.statusText}`,
+      icon: "error",
+    });
+  }
+});
 
 const fetchData = async () => {
-    try {
-
-        await $.ajax({
-            url: './../service/fetch_data_checkin.php',
-            method: "GET",
-            dataType: 'json',
-        }).done(async(res) => {
-            const results = await res;
-            if(results.status === true) {
-                const row = results.response;
-                tableData(row)
-            }
-        })
-        
-    } catch (e) {
-         Swal.fire({
-           title: "Error",
-           text: `${e.statusText}`,
-           icon: "error",
-         });
-    }
-}
-
+  try {
+    await $.ajax({
+      url: "./../service/fetch_data_checkin.php",
+      method: "GET",
+      dataType: "json",
+    }).done(async (res) => {
+      const results = await res;
+      if (results.status === true) {
+        const row = results.response;
+        tableData(row);
+      }
+    });
+  } catch (e) {
+    Swal.fire({
+      title: "Error",
+      text: `${e.statusText}`,
+      icon: "error",
+    });
+  }
+};
 
 const tableData = (row) => {
-    try {
-        let html = '';
-        html += `
+  try {
+    let html = "";
+    html += `
             <table class="table">
                 <thend>
                     <tr>
@@ -96,19 +97,35 @@ const tableData = (row) => {
                     </tr>
                 </thend>
                 <tbody>
-                    ${row.length > 0 ? row.map((item ,index) => `
-                            
-                        
-                    `): null}
+                    ${
+                      row.length > 0
+                        ? row.map(
+                            (item, index) => `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.id}</td>
+                                <td>${item.name}</td>
+                                <td>${item.date}</td>
+                                <td>${item.time}</td>
+                                <td>${item.esigin}</td>
+                            </tr>
+                    `
+                          )
+                        : `
+                        <tr>
+                          <td colspan="6">ไม่มีข้อมูล</td>
+                        </tr>
+                    `
+                    }
                 </tbody>
             </table>
         `;
-        $("#tableCheckIn").html(html);
-    } catch (e) {
-        Swal.fire({
-          title: "Error",
-          text: `${e.statusText}`,
-          icon: "error",
-        });
-    }
-}
+    $("#tableCheckIn").html(html);
+  } catch (e) {
+    Swal.fire({
+      title: "Error",
+      text: `${e.statusText}`,
+      icon: "error",
+    });
+  }
+};
